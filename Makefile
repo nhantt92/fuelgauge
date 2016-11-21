@@ -4,19 +4,11 @@ SDCC = sdcc
 #SDLD = sdld
 SDLD = sdcc
 LDFLAGS = -lstm8 -mstm8 --out-fmt-ihx --code-size 0x2000 --iram-size 0x400 -V -V --verbose
-CFLAGS = -lstm8 -mstm8 --opt-code-speed --std-c99
-#CFLAGS = -lstm8 -mstm8 --opt-code-size --std-c99 
-# vim: noet:ts=4:sw=4:
-
-SDCC = sdcc
-#SDLD = sdld
-SDLD = sdcc
-LDFLAGS = -lstm8 -mstm8 --out-fmt-ihx --code-size 0x2000 --iram-size 0x400 -V -V --verbose
-CFLAGS = -lstm8 -mstm8 --opt-code-speed --std-c99
-#CFLAGS = -lstm8 -mstm8 --opt-code-size --std-c99 
+#CFLAGS = -lstm8 -mstm8 --opt-code-speed --std-c99
+CFLAGS = -lstm8 -mstm8 --opt-code-size --std-c99 
 # --peep-file peepstm8
 # --fverbose-asm
-OBJECTS = font_cp437_5x7.rel oled1306spi.rel util.rel timing.rel main.rel 
+OBJECTS = font_cp437_5x7.rel oled1306spi.rel util.rel timing.rel font_cp437_vga_12x16.rel main.rel 
 TARGET = fuelgauge.ihx
 
 INTERMEDIATE = $(OBJECTS)
@@ -42,7 +34,8 @@ clean:
 cleanobj:
 	rm -f $(INTERMEDIATE)
 
-flash: $(TARGET)
+#flash: $(TARGET)
+flash:
 	stm8flash -cstlinkv2 -pstm8s003f3 -w $(TARGET)
 
 $(TARGET): $(OBJECTS)

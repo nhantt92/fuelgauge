@@ -29,11 +29,16 @@ void oled_spi_end();
 void oled_spi_begin(uint8_t cd);
 void spi_write(uint8_t d);
 
+void oled_gotoline(uint8_t line);
+void oled_spi_begin_data();
+
+
 void oled_write_buf_dat(const char *s, size_t n);
 void oled_write_buf_cmd(const char *s, size_t n);
 void oled_clr();
 void oled_fill(uint8_t c);
 void oled_printline(uint8_t line,const char *s);
+void oled_printline2x(uint8_t x, uint8_t y, char *s);
 void oled_on();
 void oled_off();
 void oled_print(const char *s);

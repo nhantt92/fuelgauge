@@ -24,7 +24,7 @@
 #include "oled1306spi.h"
 #include "font_cp437_5x7.h"
 #include "timing.h"
-
+#include "font_cp437_vga_12x16.h"
 
 // CS is not connected to MCU and tied low
 #define OLED_CS_PINN  3
@@ -224,6 +224,27 @@ void oled_printline(uint8_t line, const char *s){
     oled_print(s);
 }
 
+void oled_gotoline(uint8_t line){
+    oled_spi_begin(OLED_CMD);
+    spi_write(0xB0 | line);
+    spi_write(0x21);
+    spi_write(0x00); // first column
+    spi_write(0x7f); // last colume
+}
+
+void oled_gotoXY(uint8_t x, uint8_t y){
+    oled_spi_begin(OLED_CMD);
+    spi_write(0xB0 | y);
+    spi_write(0x21);
+    spi_write(x); //  column
+    spi_write(0x7f); // last colume
+}
+
+
+void oled_spi_begin_data(){
+    oled_spi_begin(OLED_DAT);
+}
+
 void test_oled_noise(uint16_t iv){
     uint8_t i;
     uint8_t j;
@@ -267,9 +288,34 @@ void oled_fill(uint8_t c){
     oled_spi_end();
 }
 
+
+uint8_t bitreverse(uint8_t c){
+  return ((c & 0x80) >> 7) | ((c & 0x40) >> 5)| ((c & 0x20) >> 3)| ((c & 0x10) >> 1) 
+    | ((c & 0x01) << 7) | ((c & 0x02) << 5)| ((c & 0x04) << 3)| ((c & 0x08) << 1);
+}
+
+void oled_printline2x(uint8_t x, uint8_t y, char *s)
+{
+    uint8_t c;
+    uint8_t i, j, k;
+    for (k = 0; k < 2; k++){
+        oled_gotoXY(x, y + k);
+        oled_spi_begin(OLED_DAT);
+        for(i = 0; i < 10 && 0 != s[i]; i++){ 
+          for(j = k; j < 24; j += 2){ // upper half
+            c = font_cp437_vga_12x16[(s[i] - 0x20) * 24 + j];
+            spi_write(bitreverse(c));
+          }
+        }
+        oled_spi_end();
+    }
+}
+
+
 void oled_clr(){
     oled_fill(0);
 }
+
 
 void test_oled_text(uint16_t iv){
     uint8_t i;

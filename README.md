@@ -15,9 +15,18 @@ Building and flashing tested in Linux and OS X.
 
 When using ST-LINK with the device plugged in, do not connect 5V power.
 
+## update Augest 2016
+
+* Now with ***huge*** LCD font 1-line current display page, and
+* ***Large*** 12x16 font 2-line V/A, time/charge display pages
+* Current offset calibration added. Unplug and remove load, press-and-hold the button, plug into USB port, wait for calibration to finish, let go the button.
+
 ## The Circuit
 
-Schematics TBD
+Schematics finished. Refer `hardware` folder, please.
+
+Now you can build your own, even with USB 3.x data pass-through.
+
 
 ### key components:
 
@@ -37,7 +46,7 @@ Schematics TBD
 | 2 | likely some control, discharge/load? | PD5/UART TX |R7-Q3-R9-D6, not mounted|
 | 3 | ? |PD6/UART RX| C3, pin8 |
 | 4 | reset || reset |
-| ... |||
+| ... |(unused)||
 | 10| LED? |PA3| R8-D5 (NP)|
 | 12| Current sensing bias|PC3| R3 |
 | 14| OLED reset? || OLED:9|
@@ -56,20 +65,20 @@ Notes:
 
 ### OLED module pinout
 
-|Pin|ext component|function|
-|---|---|---|
-|15 |C| |
-|14 |C| |
-|13 ||IREF|
-|12|MCU:17|MOSI|
-|11|MCU:16|SCK|
-|10|MCU:15| |
-|9|MCU:14| |
-|8 |GND| CS?|
-|7,5| 3V| |
-|6|GND| |
-|4,3| Charge Pump| |
-|2,1| Charge Pump| |
+|Pin|ext component| function|
+|---|---------|-------------|
+|15 | C       |             |
+|14 | C       |             |
+|13 | R       | IREF        |
+|12 | MCU:17  | MOSI        |
+|11 | MCU:16  | SCK         |
+|10 | MCU:15  | D/n         |
+|9  | MCU:14  | Reset       |
+|8  | GND     | CS?         |
+|7,5| 3V      |             |
+|6  | GND     |             |
+|4,3| C       | Charge Pump |
+|2,1| C       | Charge Pump |
 
 Notes:
 
@@ -77,3 +86,11 @@ Notes:
 * CS is not connected, tied to low.
 * On chip charge pump is used
 * be careful with SWIM port, better leave 5V pin unconnected and use USB supply, one short-circuit will blow that tiny diode.
+
+
+## Known issues
+
+* EEPROM backup may lost data when unplugged.
+* fonts spends too much flash, forced switching from `--opt-code-speed` to `--opt-code-size`
+
+
